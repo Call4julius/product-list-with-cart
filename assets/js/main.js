@@ -1,497 +1,553 @@
-// Strict mode turned on
-// This is a JavaScript feature that helps catch common coding errors and "unsafe" actions
-'use strict';
+/* CSS imports */
+@import url('reset.css');
+@import url('utility.css');
+@import url('fonts.css');
 
-// Declaration of global variables and SELECTING HTML ELEMENTS
-// ************************************************************************//
-const cart = document.querySelector('.cart');
-const dessertList = document.querySelector('.list__dessert');
-const cartList = document.querySelector('.list__cart');
-const confirmList = document.querySelector('.list__confirm');
-const emptyCart = document.querySelector('.cart__empty');
-const cartTotalWrapper = document.querySelector('.cart__total--wrapper');
-const cartConfirmWrapper = document.querySelector('.cart__confirm--wrapper');
-const cartTotalAmount = document.querySelector('.cart__total--amount');
-const cartQuantity = document.querySelector('.cart__quantity--amount');
-const confirmTotalAmount = document.querySelector('.confirm__total--amount');
-const confirmModal = document.querySelector('.confirm__modal');
-const cartConfirmBtn = document.querySelector('.cart__confirm--btn');
-const newOrderBtn = document.querySelector('.new-order__btn');
-const floatingCart = document.querySelector('.floating__cart');
-const floatingDataCount = document.querySelector('[data-count]');
-const confirmCloseIcon = document.querySelector('.confirm__modal--x-icon');
-const cartCloseBtn = document.querySelector('.cart--x-icon');
-// ************************************************************************//
+/* Global styles */
+body {
+  font-family: var(--ff-primary);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-400);
+  color: var(--color-dark-900);
+  background-color: var(--color-light-200);
 
-// Set the current year in the footer
-// ************************************************************************//
-document.querySelector('.current-year').textContent = new Date().getFullYear();
-// ************************************************************************//
+  gap: var(--space-mlarge);
+  margin-inline: auto;
+}
 
-// Locale currency formatting function
-// ************************************************************************//
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
-};
-// ************************************************************************//
+header {
+  justify-content: space-between;
+  align-items: center;
+  background-color: hsl(from var(--color-accent-1) h s 90% / 0.75);
+  backdrop-filter: blur(5px);
+  padding: var(--space-small) 7.5vw;
+  box-shadow: 0 0 5px 2.5px rgba(0, 0, 0, 0.1);
 
-// Fetch JSON data from a local file and store it in a global variable
-// This function uses the Fetch API to retrieve data from a JSON file
-// ************************************************************************//
-// IIFE (Immediately Invoked Function Expression) to fetch data
-// This pattern is used to execute the function immediately after its definition
-(async () => {
-  try {
-    const response = await fetch('./data.json'); //imports JSON data
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+
+  .logo__container {
+    .logo__label {
+      font-size: calc(var(--fs-base) * 1.5);
+      font-weight: var(--fw-600);
+      background-image: linear-gradient(
+        to bottom,
+        var(--color-accent-1),
+        var(--color-accent-2)
+      );
+      background-clip: text;
+      line-height: 1;
     }
-    const data = await response.json(); //parses JSON data
-    dessertItemGenerator(data);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return null;
-  }
-})();
-// ************************************************************************//
 
-// Dessert HTML element generator function
-// ************************************************************************//
-const dessertItemGenerator = (data) => {
-  data.forEach((dessert) => {
-    dessertList.insertAdjacentHTML(
-      'beforeend',
-      `<li class="dessert__list__item d-grid">
-        <div class="dessert__list__item__badge ">
-          <picture class="rounded">
-            <source
-              media="(max-width: 46.825em)"
-              sizes=""
-              srcset="${dessert.image.mobile}"
-              type="image/jpeg"
-            />
-            <source
-              media="(max-width: 75em)"
-              sizes=""
-              srcset="${dessert.image.tablet}"
-              type="image/jpeg"
-            />
-            <img
-              src="${dessert.image.desktop}"
-              alt="${dessert.name}"
-              loading="lazy"
-              class="rounded dessert__list__item__image"
-            />
-
-            <div class="dessert__list__item__action">
-              <button type="button" class="d-flex pill btn__add-to-cart">
-                <img src="assets/images/icon-add-to-cart.svg" alt="cart icon" aria-label="Add ${
-                  dessert.name
-                } to cart" class="icon__add-to-cart"/>
-                <p class="label__add-to-cart">Add to Cart</p>
-              </button>
-              <button type="button" class="d-flex pill hidden btn__quantity-adjuster">
-                <img
-                  src="assets/images/icon-decrement-quantity.svg"
-                  alt="decrement button" class="icon__decrement-quantity"
-                />
-                <label class="sr-only" for="input">
-                Input quantity
-                </label>
-                <input type="number" id="input" value="1" min="1" class="input__quantity-adjuster"/>
-                <img
-                  src="assets/images/icon-increment-quantity.svg"
-                  alt="increment button" class="icon__increment-quantity"
-                />
-              </button>
-              <div
-                class="tooltip text-center rounded hidden"
-                data-tooltip="Max quantity per item is 99."
-              ></div>
-            </div>
-          </picture>
-        </div>
-        <div class="dessert__list__item__detail d-grid">
-          <h3 class="dessert__list__item__detail--category">${
-            dessert.category
-          }</h3>
-          <h4 class="dessert__list__item__detail--name">${dessert.name}</h4>
-          <p class="dessert__list__item__detail--price">Price: ${formatCurrency(
-            dessert.price
-          )}</p>
-        </div>
-      </li>
-      `
-    );
-  });
-};
-// ************************************************************************//
-
-// Cart order HTML element generator function
-// ************************************************************************//
-const cartItemGenerator = (item) => {
-  cartList.insertAdjacentHTML(
-    'beforeend',
-    `<li class="cart__item d-flex">
-      <div class="cart__item--details d-grid">
-        <p class="cart__item--name">${item[0].dessertName}</p>
-        <div class="cart__item--pricing d-flex">
-          <p class="cart__item--quantity">${item[0].quantity}x</p>
-          <p class="cart__item--unit-price">@ ${formatCurrency(
-            item[0].dessertPrice
-          )}</p>
-          <p class="cart__item--unit-total">${formatCurrency(
-            item[0].dessertPrice
-          )}</p>
-        </div>
-      </div>
-      <button type="button" class="cart__item--remove__btn d-flex">
-        <img
-          src="assets/images/icon-remove-item.svg"
-          alt="remove item icon"
-          class="remove--x-icon x-icon"
-        />
-      </button>
-    </li>`
-  );
-};
-// ************************************************************************//
-
-// Confirm order HTML element generator function
-// ************************************************************************//
-const confirmItemGenerator = (item) => {
-  const thumbnail = item[0].dessertCategory
-    .split(' ')
-    .map((word) => word.split(''))
-    .map(
-      (letter) =>
-        letter[0].toLowerCase() + letter.slice(1, letter.length).join('')
-    )
-    .join('-');
-
-  confirmList.insertAdjacentHTML(
-    'beforeend',
-    `<li class="confirm__item d-flex">
-      <img
-        src="assets/images/image-${thumbnail}-thumbnail.jpg"
-        alt=""
-        class="confirm__image rounded"
-      />
-      <div class="confirm__detail d-grid">
-        <p class="confirm__detail--name">${item[0].dessertName}</p>
-        <div class="d-flex">
-          <p class="confirm__detail--quantity">1x</p>
-          <p class="confirm__detail--price">@ ${formatCurrency(
-            item[0].dessertPrice
-          )}</p>
-        </div>
-      </div>
-      <p class="confirm__detail--unit-total">${formatCurrency(
-        item[0].dessertPrice
-      )}</p>
-    </li>`
-  );
-};
-// ************************************************************************//
-
-// Encapsulation of key function
-// ************************************************************************//
-const cartAction = {
-  // This array stores clicked dessert details {name, category, price, initQty}
-  cartArray: [],
-  //This function adds item to cart
-  addToCart(item) {
-    cartItemGenerator(item);
-    confirmItemGenerator(item);
-  },
-  // This function updates the cart values -- Unit Qty, Unit Total, Order Qty, Order Total
-  updateCart(order) {
-    // Get all the orders existing in the cart
-    const cartItems = document.querySelectorAll('.cart__item--name');
-
-    // Get all the orders existing in the confirm modal
-    const confirmItems = document.querySelectorAll('.confirm__detail--name');
-
-    // Calculate and display the total quantity of items in the cart
-    floatingDataCount.dataset.count = cartQuantity.innerText =
-      this.cartArray.reduce((acc, item) => {
-        return acc + item.quantity;
-      }, 0);
-
-    // Calculate and display the total price of all items in the cart
-    confirmTotalAmount.innerText = cartTotalAmount.innerText = formatCurrency(
-      this.cartArray.reduce((acc, item) => {
-        return acc + item.dessertPrice * item.quantity;
-      }, 0)
-    );
-
-    // Find the active order
-    // Order equivalent to where the adjustment action is taking place
-    if (order) {
-      const cartItemToAdjust = [...cartItems].find(
-        (item) => item.innerText === order.dessertName
-      );
-
-      // Adjust the active order quantity
-      cartItemToAdjust.nextElementSibling.querySelector(
-        '.cart__item--quantity'
-      ).innerText = `${order.quantity}x`;
-
-      // Get confirm item to adjust
-      const confirmItemToAdjust = [...confirmItems].find(
-        (item) => item.innerText === order.dessertName
-      );
-
-      // Adjust the active order unit total
-      confirmItemToAdjust.parentElement.nextElementSibling.innerText =
-        cartItemToAdjust.nextElementSibling.querySelector(
-          '.cart__item--unit-total'
-        ).innerText = `${formatCurrency(order.quantity * order.dessertPrice)}`;
-
-      // Adjust the active order quantity
-      confirmItemToAdjust.nextElementSibling.querySelector(
-        '.confirm__detail--quantity'
-      ).innerText = `${order.quantity}x`;
+    .logo__image {
+      width: var(--space-xlarge);
+      aspect-ratio: 1 / 1;
     }
-  },
-
-  // This function remove an item in the cart
-  removeOrder(event) {
-    // Check if the remove icon is being clicked
-    // Get the particular item--remove__icon clicked
-    if (event.target?.matches('.remove--x-icon')) {
-      const itemToRemove = event.target?.closest('button').parentElement;
-
-      // Get the name of the item to be removed
-      const itemToRemoveName =
-        itemToRemove.querySelector('.cart__item--name').innerText;
-
-      // Find the index of the item in the cartArray
-      const index = this.cartArray.findIndex(
-        (item) => item.dessertName === itemToRemoveName
-      );
-
-      // Remove the item from the cartArray using the index
-      this.cartArray.splice(index, 1);
-
-      // Remove the item from the cart list
-      cartList.removeChild(itemToRemove); // remove the li
-
-      // Find the item in the dessert list and restore its default state
-      const dessertItemName = document.querySelectorAll(
-        '.dessert__list__item__detail--name'
-      );
-      const dessertCard = [...dessertItemName].find(
-        (dess) => dess.innerText === itemToRemoveName
-      ).parentElement.parentElement;
-
-      // Restore default styling
-      dessertCard.querySelector('.btn__add-to-cart').classList.remove('hidden');
-      dessertCard
-        .querySelector('.btn__quantity-adjuster')
-        .classList.add('hidden');
-      dessertCard.querySelector('picture').classList.remove('selected');
-      dessertCard.querySelector('.input__quantity-adjuster').value = 1;
-
-      // Check if the cart have items
-      if (cartList.children.length < 1) {
-        // If cart is empty display empty cart icon and remove total
-        emptyCart.classList.remove('hidden');
-        cartTotalWrapper.classList.add('hidden');
-        cartConfirmWrapper.classList.add('hidden');
-      }
-
-      // Update the cart values
-      this.updateCart();
-    }
-  },
-  // This function starts a new order after resetting the entire program to default
-  startNewOrder() {
-    cartList.replaceChildren();
-    confirmList.replaceChildren();
-    this.cartArray.length = 0;
-    emptyCart.classList.remove('hidden');
-    cartTotalWrapper.classList.add('hidden');
-    cartConfirmWrapper.classList.add('hidden');
-    dessertList.querySelectorAll('picture').forEach((pic) => {
-      pic.classList.contains('selected') && pic.classList.remove('selected');
-    });
-    dessertList.querySelectorAll('.btn__add-to-cart').forEach((btn) => {
-      if (btn.classList.contains('hidden')) {
-        btn.classList.remove('hidden');
-        btn.nextElementSibling.classList.add('hidden');
-        btn.nextElementSibling.querySelector(
-          '.input__quantity-adjuster'
-        ).value = 1;
-      }
-    });
-
-    this.updateCart();
-  },
-};
-// ************************************************************************//
-
-// Delegating all dessert action event to the Dessert List
-// ************************************************************************//
-dessertList.addEventListener('click', (event) => {
-  // Time Out tool tip
-  const timeOutTooltip = (input) => {
-    const toolTip = input.parentElement.nextElementSibling;
-    toolTip.classList.remove('hidden');
-    setTimeout(() => {
-      toolTip.classList.add('hidden');
-    }, 3000);
-  };
-
-  // This function finds the dessert item where an action is happening
-  const findCartItem = (dessertName) => {
-    return cartAction.cartArray.find(
-      (item) => item.dessertName === dessertName
-    );
-  };
-
-  // ADD-TO-CART BUTTON CLICK EVENT
-  // Check if the add-to-cart button is being clicked
-  if (
-    event.target?.matches(
-      '.btn__add-to-cart, .icon__add-to-cart, .label__add-to-cart'
-    )
-  ) {
-    // Get the clicked dessert item details
-    const dessertItem = event.target?.closest('.dessert__list__item');
-    const dessertName = dessertItem.querySelector(
-      '.dessert__list__item__detail--name'
-    ).textContent;
-    const dessertPrice = +dessertItem
-      .querySelector('.dessert__list__item__detail--price')
-      .textContent.slice(8);
-    const dessertCategory = dessertItem.querySelector(
-      '.dessert__list__item__detail--category'
-    ).textContent;
-
-    // Add selected border UI
-    dessertItem.querySelector('picture').classList.add('selected');
-
-    // Push the details obtained above into the cartArray
-    cartAction.cartArray.push({
-      dessertName,
-      dessertPrice,
-      dessertCategory,
-      quantity: 1,
-    });
-
-    // Hide the empty-cart message & image and show the carbon-neutral message and total
-    const btnAddToCart = event.target?.closest('button');
-    btnAddToCart.classList.add('hidden');
-    btnAddToCart.nextElementSibling.classList.remove('hidden');
-    emptyCart.classList.add('hidden');
-    cartTotalWrapper.classList.remove('hidden');
-    cartConfirmWrapper.classList.remove('hidden');
-
-    // Create the ordered cart items as they are clicked
-    cartAction.addToCart(cartAction.cartArray.slice(-1));
-
-    // Update the total price of the cart
-    cartAction.updateCart();
   }
 
-  // QUANTITY-ADJUSTER BUTTON CLICK EVENT AND INPUT EVENT
-  // Check if the quantity-adjuster button input element is being interacted with
-  if (
-    event.target?.matches(
-      '.icon__decrement-quantity, .icon__increment-quantity, .input__quantity-adjuster'
-    )
-  ) {
-    // Get the clicked dessert item details
-    const dessertItem = event.target?.closest('.dessert__list__item');
-    const dessertName = dessertItem.querySelector(
-      '.dessert__list__item__detail--name'
-    ).textContent;
-    const quantityInput = dessertItem.querySelector(
-      '.input__quantity-adjuster'
-    );
+  .nav__main {
+    align-self: flex-end;
 
-    // QUANTITY-ADJUSTER BUTTON CLICK EVENT
-    // Handle increment and decrement actions
-    if (event.target?.matches('.icon__increment-quantity')) {
-      // Sets the maximum order quantity per item to 99
-      if (+quantityInput.value < 99) {
-        quantityInput.value = findCartItem(dessertName).quantity += 1;
-        cartAction.updateCart(findCartItem(dessertName));
-        if (+quantityInput.value === 99) timeOutTooltip(quantityInput);
-      }
-    } else if (
-      event.target?.matches('.icon__decrement-quantity') &&
-      findCartItem(dessertName).quantity > 1
-    ) {
-      quantityInput.value = findCartItem(dessertName).quantity -= 1;
-      cartAction.updateCart(findCartItem(dessertName));
-    }
+    .nav__list {
+      gap: var(--space-mlarge);
+      align-self: flex-end;
 
-    // QUANTITY-ADJUSTER INPUT CLICK EVENT
-    // Check if the input element is being adjusted
-    if (event.target?.matches('.input__quantity-adjuster')) {
-      // Input listener adjust quantity according to the inputed quantity
-      quantityInput.addEventListener('input', () => {
-        if (quantityInput.value.length > 2) {
-          quantityInput.value = quantityInput.value.slice(0, -1);
-          timeOutTooltip(quantityInput);
+      [href] {
+        color: var(--color-accent-1);
+        font-size: calc(var(--fs-base) * 1.125);
+        font-weight: var(--fw-600);
+        text-decoration: none;
+        gap: calc(var(--space-small) / 2);
+        position: relative;
+
+        &::before {
+          content: '';
+          width: 0px;
+          height: 1.5px;
+          position: absolute;
+          background-color: var(--color-accent-2);
+          bottom: -2px;
         }
-        findCartItem(dessertName).quantity = +quantityInput.value;
-        cartAction.updateCart(findCartItem(dessertName));
-      });
 
-      // Blur listener adjust quantity when input loses focus
-      quantityInput.addEventListener('blur', (event) => {
-        if (event.target.value === '') {
-          quantityInput.value = findCartItem(dessertName).quantity = 1;
-          cartAction.updateCart(findCartItem(dessertName));
+        &:is(:hover, :focus-visible)::before {
+          width: 100%;
+          transition: width 0.4s ease-in-out;
         }
-      });
+      }
     }
   }
-});
-// ************************************************************************//
+}
 
-// Button eventListeners
-// ************************************************************************//
-cartConfirmBtn.addEventListener('click', (event) => {
-  event.preventDefault();
-  cart.style.display = 'none';
-  confirmModal.showModal();
-});
+.global-btn {
+  padding: calc(var(--space-small) / 1.25) var(--space-medium);
+  font-weight: var(--fw-600);
+  color: var(--color-light-100);
+  background-color: var(--color-accent-1);
+  border: 0;
+  outline: 0;
+  cursor: pointer;
 
-confirmCloseIcon.addEventListener('click', () => {
-  confirmModal.close();
-  cart.style.display = 'grid';
-});
+  &:is(:hover, :focus-visible) {
+    background-color: var(--color-accent-2);
+  }
+}
 
-newOrderBtn.addEventListener('click', (event) => {
-  event.preventDefault();
-  cartAction.startNewOrder();
-  confirmModal.close();
-  floatingCart.style.display = 'flex';
-});
+/* Components styling */
+.main {
+  width: min(85vw, 1800px);
+  margin-inline: auto;
+  margin-top: calc(var(--space-xlarge) * 2);
+  gap: var(--space-mlarge);
+  grid-template-columns: 1fr max(300px, 25vw);
+  grid-template-rows: auto;
+  position: relative;
 
-floatingCart.addEventListener('click', () => {
-  cart.style.display = 'grid';
-  floatingCart.style.display = 'none';
-});
+  .label__dessert {
+    margin-bottom: var(--space-medium);
+  }
 
-cartCloseBtn.addEventListener('click', () => {
-  cart.style.display = 'none';
-  floatingCart.style.display = 'flex';
-});
-// ************************************************************************//
+  .list__dessert {
+    grid-template-columns: repeat(auto-fit, minmax(min(250px, 20vw), 1fr));
+    column-gap: var(--space-medium);
+    row-gap: calc(var(--space-large) / 1.25);
 
-// Delegating all cart action event to the Cart List
-// ************************************************************************//
-cartList.addEventListener('click', (event) => {
-  cartAction.removeOrder(event);
-});
-// ************************************************************************//
+    .dessert__list__item {
+      gap: calc(var(--space-mlarge) / 1.5);
+
+      picture {
+        position: relative;
+      }
+
+      .dessert__list__item__detail {
+        gap: calc(var(--space-small) / 2);
+
+        .dessert__list__item__detail--category {
+          font-size: calc(var(--fs-base) * 0.875);
+          font-weight: var(--fw-600);
+          color: var(--color-dark-600);
+        }
+
+        .dessert__list__item__detail--price {
+          font-weight: var(--fw-600);
+          color: var(--color-accent-1);
+        }
+      }
+
+      .dessert__list__item__action {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        translate: -50% -50%;
+
+        button {
+          cursor: pointer;
+          width: 10rem;
+          padding: calc(var(--space-small) / 1.25) var(--space-medium);
+          font-weight: var(--fw-600);
+          color: var(--color-dark-900);
+          outline: 0;
+          border: 0;
+          border: 1.5px solid currentColor;
+
+          gap: var(--space-small);
+          justify-content: center;
+          align-items: center;
+
+          &:is(:hover, :focus-visible) {
+            border-color: var(--color-accent-1);
+          }
+
+          &.btn__add-to-cart {
+            background-color: var(--color-light-100);
+          }
+
+          &.btn__quantity-adjuster {
+            justify-content: space-between;
+            background-color: var(--color-accent-1);
+            border: 0;
+
+            img {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: calc(var(--space-mlarge) / 1.5);
+              aspect-ratio: 1;
+              border: 1px solid var(--color-light-100);
+              border-radius: 50%;
+              padding: calc(var(--space-small) / 2);
+
+              &:active {
+                background-color: var(--color-dark-600);
+              }
+            }
+          }
+        }
+
+        input {
+          width: calc(var(--space-large) / 2);
+          color: var(--color-light-100);
+          background-color: var(--color-accent-1);
+          border: 0;
+          outline: 0;
+          text-align: center;
+
+          &::-webkit-inner-spin-button,
+          &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+        }
+
+        .tooltip.hidden {
+          opacity: 0;
+          -webkit-transform: translateY(var(--space-mlarge));
+          -ms-transform: translateY(var(--space-mlarge));
+          transform: translateY(var(--space-mlarge));
+          transition: all 500ms ease-in-out;
+          transition-behavior: allow-discrete;
+
+          @starting-style {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+            -ms-transform: translateY(0);
+            transform: translateY(0);
+          }
+        }
+
+        .tooltip {
+          height: max-content;
+          position: absolute;
+          bottom: calc(var(--space-mlarge) * 1.75);
+          z-index: 1000;
+          opacity: 1;
+          -webkit-transform: translateY(0px);
+          -ms-transform: translateY(0px);
+          transform: translateY(0px);
+          color: var(--color-accent-1);
+          font-weight: var(--fw-600);
+          background-color: hsl(from var(--color-accent-1) h s 90% / 0.9);
+          padding: calc(var(--space-small) / 2) var(--space-small);
+          font-size: calc(var(--fs-base) / 1.25);
+
+          transition: all 500ms cubic-bezier(0.39, 0.93, 1, 1.36);
+          transition-behavior: allow-discrete;
+
+          @starting-style {
+            opacity: 0;
+            -webkit-transform: translateY(var(--space-mlarge));
+            -ms-transform: translateY(var(--space-mlarge));
+            transform: translateY(var(--space-mlarge));
+          }
+
+          &::after {
+            content: attr(data-tooltip);
+          }
+        }
+      }
+    }
+  }
+
+  .cart {
+    grid-area: aside;
+    gap: var(--space-medium);
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+
+    position: fixed;
+    grid-column: span 1 / 3;
+    grid-row: span 2 / 3;
+    color: var(--color-dark-900);
+    background-color: var(--color-light-100);
+    padding: var(--space-medium) var(--space-mlarge);
+    width: max(300px, 25vw);
+
+    .cart__quantity--label {
+      color: var(--color-accent-1);
+    }
+
+    .list__cart {
+      max-height: 40dvh;
+      overflow-y: auto;
+      padding-inline: var(--space-small);
+
+      .cart__item {
+        border-bottom: 0.125px solid
+          hsl(from var(--color-dark-900) h s 40% / 0.25);
+        padding-block: var(--space-medium);
+      }
+
+      .cart__item--details {
+        font-weight: var(--fw-600);
+        font-size: calc(var(--fs-base) / 1.125);
+        gap: calc(var(--space-small) / 2);
+
+        .cart__item--pricing {
+          gap: calc(var(--space-mlarge) / 1.25);
+
+          .cart__item--quantity {
+            color: var(--color-accent-1);
+          }
+          .cart__item--unit-price {
+            color: var(--color-dark-600);
+          }
+          .cart__item--unit-total {
+            color: hsl(from var(--color-dark-700), h s 10% / 0.5);
+          }
+        }
+      }
+
+      .cart__item--remove__btn {
+        justify-content: center;
+        align-items: center;
+        margin-left: auto;
+        outline: 0;
+        border: 0;
+        background-color: transparent;
+        cursor: pointer;
+      }
+    }
+
+    .cart__total--wrapper {
+      margin-block: var(--space-small);
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart__empty--icon,
+    .carbon-neutral {
+      place-self: center;
+    }
+
+    .cart__confirm--wrapper {
+      gap: var(--space-mlarge);
+
+      .carbon-neutral {
+        width: 100%;
+        gap: var(--space-small);
+        background-color: var(--color-light-200);
+        padding: var(--space-small) var(--space-medium);
+
+        span {
+          font-weight: var(--fw-600);
+        }
+      }
+    }
+  }
+
+  .floating__cart {
+    cursor: pointer;
+    gap: 0;
+    justify-content: flex-start;
+    align-items: flex-end;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    right: 7.5%;
+    bottom: 5%;
+    outline: 0;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    padding: calc(var(--space-small) * 1);
+    box-shadow: 0 0 1em hsl(from var(--color-accent-1) h s l / 0.5);
+    background-color: hsl(from var(--color-accent-1) h s 75% / 0.95);
+
+    [data-count]::after {
+      content: attr(data-count);
+      position: absolute;
+      z-index: 2000;
+      top: 12.5%;
+      right: 12.5%;
+      display: grid;
+      place-content: center;
+      color: var(--color-accent-1);
+      background-color: hsl(from var(--color-accent-1) h s 90% / 0.75);
+      border: 1px solid;
+      border-radius: 50%;
+      font-size: calc(var(--fs-base) / 1.5);
+      font-weight: var(--fw-600);
+      width: 22.5px;
+      aspect-ratio: 1;
+      text-align: center;
+    }
+  }
+}
+
+.confirm__modal {
+  width: min(85vw, 450px);
+  padding: var(--space-mlarge);
+  border: 0;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+
+  .confirm__form {
+    gap: calc(var(--space-mlarge) / 1.5);
+
+    .confirm__title--wrapper {
+      gap: calc(var(--space-small) / 2);
+
+      h2 {
+        font-size: 1.75rem;
+      }
+
+      p {
+        font-size: calc(var(--fs-base) / 1.5);
+        color: var(--color-dark-700);
+      }
+    }
+
+    .confirm__icon--wrapper {
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .list__confirm--wrapper {
+      background-color: var(--color-light-200);
+      padding: var(--space-small);
+
+      .list__confirm {
+        max-height: 40dvh;
+        overflow-y: scroll;
+        padding-inline: var(--space-small) var(--space-medium);
+
+        .confirm__item {
+          gap: var(--space-medium);
+          font-size: calc(var(--fs-base) / 1.125);
+          align-items: center;
+          border-bottom: 0.125px solid
+            hsl(from var(--color-dark-900) h s 40% / 0.25);
+          padding-block: var(--space-medium);
+
+          .confirm__image {
+            width: 40px;
+            height: 40px;
+          }
+
+          .confirm__detail {
+            justify-items: start;
+
+            .confirm__detail--name {
+              font-weight: var(--fw-600);
+            }
+
+            div {
+              gap: var(--space-medium);
+
+              .confirm__detail--quantity {
+                color: var(--color-accent-1);
+                font-weight: var(--fw-600);
+              }
+
+              .confirm__detail--price {
+                color: var(--color-dark-600);
+              }
+            }
+          }
+
+          .confirm__detail--unit-total {
+            margin-left: auto;
+            font-weight: var(--fw-600);
+            color: hsl(from var(--color-dark-700), h s 10% / 0.5);
+          }
+        }
+      }
+
+      .confirm__total {
+        justify-content: space-between;
+        align-items: center;
+        margin-top: var(--space-medium);
+        padding: var(--space-small) var(--space-medium);
+      }
+    }
+  }
+
+  &::backdrop {
+    background-color: hsl(from var(--color-dark-900) h s 40% / 0.25);
+  }
+}
+
+/* Attribution */
+footer {
+  color: var(--color-accent-1);
+  place-content: center;
+  gap: calc(var(--space-small) / 2);
+  margin-bottom: var(--space-large);
+  padding-inline: var(--space-mlarge);
+
+  a {
+    color: var(--color-accent-2);
+    text-decoration: none;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 0px;
+      height: 1.5px;
+      background-color: var(--color-accent-2);
+    }
+
+    &:is(:hover, :focus-visible)::before {
+      width: 100%;
+      transition: width 0.4s ease-in-out;
+    }
+  }
+}
+
+/* Media query */
+@media screen and (width < 52.5em) {
+  header {
+    padding-block: 0;
+
+    .logo__label {
+      display: none;
+    }
+
+    .logo__image {
+      width: var(--space-small);
+    }
+  }
+
+  .main {
+    width: min(85vw, 1800px);
+    margin-top: calc(var(--space-large) * 2);
+    grid-template-columns: auto;
+
+    .list__dessert {
+      grid-template-columns: repeat(auto-fit, minmax(min(225px, 45vw), 1fr));
+    }
+
+    .cart {
+      display: none;
+      grid-column: span 1 / 2;
+      grid-row: span 1 / 2;
+      width: 85vw;
+
+      .cart--x-icon {
+        display: block;
+      }
+    }
+
+    .floating__cart {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (width < 52.5em) and (orientation: landscape) {
+  .main {
+    .cart {
+      gap: var(--space-small);
+      translate: 0 -30%;
+      z-index: 5000;
+
+      .list__cart {
+        max-height: 25dvh;
+
+        .cart__item {
+          padding-block: var(--space-small);
+        }
+      }
+    }
+  }
+}
