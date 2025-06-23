@@ -1,3 +1,5 @@
+// Strict mode turned on
+// This is a JavaScript feature that helps catch common coding errors and "unsafe" actions
 'use strict';
 
 // Declaration of global variables and SELECTING HTML ELEMENTS
@@ -24,6 +26,18 @@ const cartCloseBtn = document.querySelector('.cart--x-icon');
 // Set the current year in the footer
 // ************************************************************************//
 document.querySelector('.current-year').textContent = new Date().getFullYear();
+// ************************************************************************//
+
+// Locale currency formatting function
+// ************************************************************************//
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+};
 // ************************************************************************//
 
 // Fetch JSON data from a local file and store it in a global variable
@@ -107,8 +121,8 @@ const dessertItemGenerator = (data) => {
             dessert.category
           }</h3>
           <h4 class="dessert__list__item__detail--name">${dessert.name}</h4>
-          <p class="dessert__list__item__detail--price">Price: $${dessert.price.toFixed(
-            2
+          <p class="dessert__list__item__detail--price">Price: ${formatCurrency(
+            dessert.price
           )}</p>
         </div>
       </li>
@@ -128,11 +142,11 @@ const cartItemGenerator = (item) => {
         <p class="cart__item--name">${item[0].dessertName}</p>
         <div class="cart__item--pricing d-flex">
           <p class="cart__item--quantity">${item[0].quantity}x</p>
-          <p class="cart__item--unit-price">@ $${item[0].dessertPrice.toFixed(
-            2
+          <p class="cart__item--unit-price">@ ${formatCurrency(
+            item[0].dessertPrice
           )}</p>
-          <p class="cart__item--unit-total">$${item[0].dessertPrice.toFixed(
-            2
+          <p class="cart__item--unit-total">${formatCurrency(
+            item[0].dessertPrice
           )}</p>
         </div>
       </div>
@@ -172,13 +186,13 @@ const confirmItemGenerator = (item) => {
         <p class="confirm__detail--name">${item[0].dessertName}</p>
         <div class="d-flex">
           <p class="confirm__detail--quantity">1x</p>
-          <p class="confirm__detail--price">@ $${item[0].dessertPrice.toFixed(
-            2
+          <p class="confirm__detail--price">@ ${formatCurrency(
+            item[0].dessertPrice
           )}</p>
         </div>
       </div>
-      <p class="confirm__detail--unit-total">$${item[0].dessertPrice.toFixed(
-        2
+      <p class="confirm__detail--unit-total">${formatCurrency(
+        item[0].dessertPrice
       )}</p>
     </li>`
   );
@@ -210,11 +224,11 @@ const cartAction = {
       }, 0);
 
     // Calculate and display the total price of all items in the cart
-    confirmTotalAmount.innerText = cartTotalAmount.innerText = this.cartArray
-      .reduce((acc, item) => {
+    confirmTotalAmount.innerText = cartTotalAmount.innerText = formatCurrency(
+      this.cartArray.reduce((acc, item) => {
         return acc + item.dessertPrice * item.quantity;
       }, 0)
-      .toFixed(2);
+    );
 
     // Find the active order
     // Order equivalent to where the adjustment action is taking place
@@ -228,24 +242,21 @@ const cartAction = {
         '.cart__item--quantity'
       ).innerText = `${order.quantity}x`;
 
-      // Adjust the active order unit total
-      cartItemToAdjust.nextElementSibling.querySelector(
-        '.cart__item--unit-total'
-      ).innerText = `$${(order.quantity * order.dessertPrice).toFixed(2)}`;
-
+      // Get confirm item to adjust
       const confirmItemToAdjust = [...confirmItems].find(
         (item) => item.innerText === order.dessertName
       );
+
+      // Adjust the active order unit total
+      confirmItemToAdjust.parentElement.nextElementSibling.innerText =
+        cartItemToAdjust.nextElementSibling.querySelector(
+          '.cart__item--unit-total'
+        ).innerText = `${formatCurrency(order.quantity * order.dessertPrice)}`;
 
       // Adjust the active order quantity
       confirmItemToAdjust.nextElementSibling.querySelector(
         '.confirm__detail--quantity'
       ).innerText = `${order.quantity}x`;
-
-      // Adjust the active order unit total
-      confirmItemToAdjust.parentElement.nextElementSibling.innerText = `$${(
-        order.quantity * order.dessertPrice
-      ).toFixed(2)}`;
     }
   },
 
@@ -254,7 +265,7 @@ const cartAction = {
     // Check if the remove icon is being clicked
     // Get the particular item--remove__icon clicked
     if (event.target?.matches('.remove--x-icon')) {
-      const itemToRemove = event.target?.closest('button').parentElement; //li
+      const itemToRemove = event.target?.closest('button').parentElement;
 
       // Get the name of the item to be removed
       const itemToRemoveName =
@@ -319,6 +330,7 @@ const cartAction = {
         ).value = 1;
       }
     });
+
     this.updateCart();
   },
 };
