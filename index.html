@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script type="module" src="assets/js/main.js" defer></script>
+    <title>Dessert Shopping App</title>
+  </head>
+  <body class="flow-content">
+    <header id="header" class="d-flex">
+      <div class="logo__container d-flex">
+        <h1 class="logo__label d-grid">
+          <span>D</span><span></span>S<span>A</span>
+        </h1>
+        <img
+          src="assets/images/logo.jpg"
+          alt="company logo"
+          class="logo__image"
+        />
+      </div>
+      <nav class="nav__main">
+        <ul role="list" class="d-flex nav__list">
+          <li class="nav__list--item"><a href="#desserts">Desserts</a></li>
+          <li class="nav__list--item">
+            <a href="#cart" class="d-flex"
+              >Your Cart
+              <img src="assets/images/icon-add-to-cart.svg" alt="cart icon" />
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="main d-grid">
+      <!-- Curated dessert Section -->
+      <section id="section__dessert" class="d-grid">
+        <h2 class="label__dessert">Available Desserts</h2>
+        <ul class="list__dessert d-grid" role="list">
+          <!-- Dessert items will be dynamically added here -->
+        </ul>
+      </section>
+
+      <!-- Cart Section -->
+      <aside class="cart d-grid rounded">
+        <img
+          src="assets/images/icon-remove-item.svg"
+          alt="close icon"
+          class="cart--x-icon x-close hidden"
+        />
+        <h2 class="cart__quantity--label">
+          Your Cart (<span class="cart__quantity--amount">0</span>)
+        </h2>
+        <div class="d-grid cart__empty">
+          <img
+            src="assets/images/illustration-empty-cart.svg"
+            alt="empty cart icon"
+            class="cart__empty--icon"
+          />
+          <p class="text-center">Your added items will appear here.</p>
+        </div>
+        <ul class="list__cart d-grid" role="list">
+          <!-- Cart items will be dynamically added here -->
+        </ul>
+        <div class="d-flex cart__total--wrapper hidden">
+          <p class="cart__total--label">Order Total</p>
+          <h2 class="cart__total--title">
+            $<span class="cart__total--amount"></span>
+          </h2>
+        </div>
+        <div class="d-grid cart__confirm--wrapper hidden">
+          <div class="carbon-neutral text-center rounded d-flex">
+            <img src="assets/images/icon-carbon-neutral.svg" alt="tree icon" />
+            <p class="text-center">
+              This is a <span>carbon-neutral</span> delivery.
+            </p>
+          </div>
+          <button type="button" class="cart__confirm--btn global-btn pill">
+            Confirm Order
+          </button>
+        </div>
+      </aside>
+
+      <!-- Confirm order Modal -->
+      <dialog class="confirm__modal rounded">
+        <form action="post" class="confirm__form d-grid">
+          <div class="confirm__title--wrapper d-grid">
+            <div class="confirm__icon--wrapper d-flex">
+              <img
+                src="assets/images/icon-order-confirmed.svg"
+                alt="tick icon"
+              />
+              <img
+                src="assets/images/icon-remove-item.svg"
+                alt="close icon"
+                class="confirm__modal--x-icon x-close"
+              />
+            </div>
+            <h2>Order Confirmed</h2>
+            <p>We hope you enjoyed your food!</p>
+          </div>
+          <div class="list__confirm--wrapper rounded d-grid">
+            <ul class="list__confirm d-grid" role="list">
+              <!-- Confirm order will be dynamically added -->
+            </ul>
+            <div class="d-flex confirm__total">
+              <p class="confirm__total--label">Order Total</p>
+              <h2 class="confirm__total--title">
+                $<span class="confirm__total--amount">21.00</span>
+              </h2>
+            </div>
+          </div>
+          <button type="submit" class="new-order__btn global-btn pill">
+            Start New Order
+          </button>
+        </form>
+      </dialog>
+
+      <!-- Floating btn cart launcher -->
+      <div type="button" class="floating__cart">
+        <div data-count="0"></div>
+        <img
+          src="assets/images/arrow-up-solid.svg"
+          width="20px"
+          class="floating__cart--arrow-up"
+        />
+        <img
+          src="assets/images/icon-add-to-cart.svg"
+          width="20px"
+          class="floating__cart--icon"
+        />
+      </div>
+    </main>
+
+    <footer class="d-grid text-center">
+      <p>&copy;<span class="current-year"></span></p>
+      <p>
+        Challenge by
+        <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a
+        >. Coded by
+        <a
+          href="mailto:call4julius@gmail.com?subject=I%20have%20a%20job%20for%20you."
+          >Uwuigbe Julius</a
+        >.
+      </p>
+    </footer>
+  </body>
+</html>

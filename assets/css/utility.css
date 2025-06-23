@@ -1,0 +1,107 @@
+/* Custom classes */
+
+:root {
+  /* Colors */
+  --color-light-100: hsl(20, 50%, 98%);
+  --color-light-200: hsl(13, 31%, 94%);
+  --color-dark-500: hsl(14, 25%, 72%);
+  --color-dark-600: hsl(7, 20%, 60%);
+  --color-dark-700: hsl(12, 20%, 44%);
+  --color-dark-900: hsl(14, 65%, 9%);
+  --color-accent-1: hsl(14, 86%, 42%);
+  --color-accent-2: hsl(159, 69%, 38%);
+
+  /* Gradient */
+  --gradient: hsl(from var(--color-dark-700) h s 70% / 0.9),
+    hsl(from var(--color-accent-1) h s 70% / 0.9) 35%,
+    hsl(from var(--color-accent-2) h s 70% / 0.9);
+
+  /* Typography */
+  --ff-primary: 'Red Hat Text', sans-serif;
+  --fs-base: 1rem; /* 16px */
+  --fw-400: 400; /* Regular */
+  --fw-600: 600; /* SemiBold */
+  --fw-700: 700; /* Bold */
+
+  /* Spacing */
+  --space-small: 0.5rem; /* 8px */
+  --space-medium: 1rem; /* 16px */
+  --space-mlarge: 2rem; /* 48px */
+  --space-large: 3rem; /* 32px */
+  --space-xlarge: 4rem; /* 64px */
+}
+
+/* Utility classes */
+.d-flex {
+  display: flex;
+}
+
+.d-grid {
+  display: grid;
+}
+
+.d-block {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.rounded {
+  border-radius: var(--space-small);
+}
+
+.pill {
+  border-radius: 100vw;
+}
+
+.selected {
+  border: 2.5px solid transparent;
+  background: linear-gradient(
+        hsl(from var(--color-accent-2) h s 90% / 0.75),
+        hsl(from var(--color-accent-2) h s 95% / 0.75)
+      )
+      padding-box,
+    linear-gradient(45deg, var(--gradient)) border-box;
+}
+
+.flow-content > * + * {
+  margin-bottom: var(--space-mlarge);
+}
+
+.x-icon {
+  cursor: pointer;
+  margin-left: auto;
+  width: 17.5px;
+  height: 17.5px;
+  border: 1.5px solid var(--color-dark-600);
+  border-radius: 50%;
+  padding: calc(var(--space-small) / 4);
+}
+
+.x-close {
+  cursor: pointer;
+  margin-left: auto;
+  background-color: hsl(from var(--color-accent-1) h s 50% / 1);
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  padding: calc(var(--space-small) / 4);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
