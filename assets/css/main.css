@@ -534,7 +534,7 @@ footer {
   }
 }
 
-@media (orientation: landscape) {
+@media screen and (width < 52.5em) and (orientation: landscape) {
   .main {
     .cart {
       gap: var(--space-small);
@@ -543,7 +543,6 @@ footer {
 
       .list__cart {
         max-height: 25dvh;
-        /* overflow-y: hidden; */
 
         .cart__item {
           padding-block: var(--space-small);
