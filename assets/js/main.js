@@ -252,7 +252,7 @@ const cartAction = {
       confirmItemToAdjust.parentElement.nextElementSibling.innerText =
         cartItemToAdjust.nextElementSibling.querySelector(
           '.cart__item--unit-total'
-        ).innerText = `${formatCurrency(order.quantity * order.dessertPrice)}`;
+        ).innerText = formatCurrency(order.quantity * order.dessertPrice);
 
       // Adjust the active order quantity
       confirmItemToAdjust.nextElementSibling.querySelector(
@@ -478,7 +478,9 @@ newOrderBtn.addEventListener('click', (event) => {
   event.preventDefault();
   cartAction.startNewOrder();
   confirmModal.close();
-  floatingCart.style.display = 'flex';
+  if (media.matches) {
+    floatingCart.style.display = 'flex';
+  }
 });
 
 floatingCart.addEventListener('click', () => {
