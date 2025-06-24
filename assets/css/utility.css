@@ -1,5 +1,11 @@
-/* Custom classes */
+/* Register a custom property */
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
 
+/* Custom classes */
 :root {
   /* Colors */
   --color-light-100: hsl(20, 50%, 98%);
@@ -15,6 +21,9 @@
   --gradient: hsl(from var(--color-dark-700) h s 70% / 0.9),
     hsl(from var(--color-accent-1) h s 70% / 0.9) 35%,
     hsl(from var(--color-accent-2) h s 70% / 0.9);
+
+  /* Angle */
+  --angle: 0deg;
 
   /* Typography */
   --ff-primary: 'Red Hat Text', sans-serif;
@@ -87,11 +96,25 @@
 .x-close {
   cursor: pointer;
   margin-left: auto;
-  background-color: hsl(from var(--color-accent-1) h s 50% / 1);
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  padding: calc(var(--space-small) / 4);
+  background-color: hsl(from var(--color-dark-700) h s 50% / 1);
+  width: 20px;
+  height: 20px;
+  border-radius: var(--space-small);
+  padding: calc(var(--space-small) / 2);
+}
+
+.global-btn {
+  padding: calc(var(--space-small) / 1.25) var(--space-medium);
+  font-weight: var(--fw-600);
+  color: var(--color-light-100);
+  background-color: var(--color-accent-1);
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+
+  &:is(:hover, :focus-visible) {
+    background-color: var(--color-accent-2);
+  }
 }
 
 .sr-only {
