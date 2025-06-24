@@ -10,8 +10,6 @@ body {
   font-weight: var(--fw-400);
   color: var(--color-dark-900);
   background-color: var(--color-light-200);
-
-  gap: var(--space-mlarge);
   margin-inline: auto;
 }
 
@@ -474,7 +472,7 @@ footer {
     color: var(--color-accent-2);
     text-decoration: none;
     position: relative;
-    z-index: -2;
+    cursor: pointer;
 
     &::before {
       content: '';
