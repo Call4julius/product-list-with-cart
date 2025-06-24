@@ -49,13 +49,13 @@
 
       <!-- Cart Section -->
       <aside class="cart d-grid rounded">
-        <img
-          src="assets/images/icon-remove-item.svg"
-          alt="close icon"
-          class="cart--x-icon x-close hidden"
-        />
-        <h2 class="cart__quantity--label">
+        <h2 class="cart__quantity--label d-flex">
           Your Cart (<span class="cart__quantity--amount">0</span>)
+          <img
+            src="assets/images/icon-remove-item.svg"
+            alt="close icon"
+            class="cart--x-icon x-close hidden"
+          />
         </h2>
         <div class="d-grid cart__empty">
           <img
@@ -121,7 +121,7 @@
       </dialog>
 
       <!-- Floating btn cart launcher -->
-      <div type="button" class="floating__cart">
+      <div class="floating__cart">
         <div data-count="0"></div>
         <img
           src="assets/images/arrow-up-solid.svg"
