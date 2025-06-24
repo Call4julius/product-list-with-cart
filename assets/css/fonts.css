@@ -1,8 +1,8 @@
 /* Hosted fonts */
 @font-face {
   font-family: 'Red Hat Text';
-  src: url('../fonts/RedHatText-regular.woff2') format('woff2'),
-    url('../fonts/RedHatText-regular.woff') format('woff');
+  src: url('../fonts/RedHatText-Regular.woff2') format('woff2'),
+    url('../fonts/RedHatText-Regular.woff') format('woff');
   font-weight: 400;
 }
 
@@ -15,7 +15,7 @@
 
 @font-face {
   font-family: 'Red Hat Text';
-  src: url('../fonts/RedHatText-bold.woff2') format('woff2'),
-    url('../fonts/RedHatText-bold.woff') format('woff');
+  src: url('../fonts/RedHatText-Bold.woff2') format('woff2'),
+    url('../fonts/RedHatText-Bold.woff') format('woff');
   font-weight: 700;
 }
