@@ -170,7 +170,7 @@ header {
         }
 
         input[type='number'] {
-          width: calc(var(--space-large) / 1.5);
+          width: calc(var(--space-large) / 1.125);
           color: var(--color-light-100);
           background-color: var(--color-accent-1);
           border: 0;
