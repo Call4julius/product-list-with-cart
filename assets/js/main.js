@@ -112,7 +112,7 @@ const dessertItemGenerator = (data) => {
               </button>
               <div
                 class="tooltip text-center rounded hidden"
-                data-tooltip="Max quantity per item is 99."
+                data-tooltip="Maximum quantity per item is 99."
               ></div>
             </div>
           </picture>
