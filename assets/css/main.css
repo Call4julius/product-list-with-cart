@@ -203,7 +203,6 @@ header {
         }
 
         .tooltip {
-          height: max-content;
           position: absolute;
           bottom: calc(var(--space-mlarge) * 1.75);
           z-index: 1000;
