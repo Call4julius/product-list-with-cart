@@ -170,7 +170,7 @@ header {
         }
 
         input[type='number'] {
-          width: calc(var(--space-large) / 1.125);
+          width: calc(var(--space-large) / 1.25);
           color: var(--color-light-100);
           background-color: var(--color-accent-1);
           border: 0;
@@ -515,9 +515,9 @@ footer {
     .cart {
       display: none;
       top: unset;
-      bottom: var(--space-small);
+      bottom: 0;
       left: 50%;
-      transform: translate(-50%, -5%);
+      translate: -50% -12.5%;
       width: min(85vw, 450px);
 
       .cart--x-icon {
@@ -535,11 +535,11 @@ footer {
   .main {
     .cart {
       gap: var(--space-small);
-      translate: 0 -30%;
+      translate: -50% -5%;
       z-index: 5000;
 
       .list__cart {
-        max-height: 25dvh;
+        max-height: 17.5dvh;
 
         .cart__item {
           padding-block: var(--space-small);
