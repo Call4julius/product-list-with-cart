@@ -427,15 +427,6 @@ header {
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     padding: calc(var(--space-small) * 1);
-    background: conic-gradient(
-      from var(--angle),
-      hsl(from var(--color-accent-1) h s 75% / 0.95),
-      hsl(from var(--color-accent-2) h s 75% / 0.95),
-      hsl(from var(--color-dark-700) h s 75% / 0.95),
-      hsl(from var(--color-accent-2) h s 75% / 0.95),
-      hsl(from var(--color-accent-1) h s 75% / 0.95)
-    );
-    animation: rotation 10s linear infinite;
 
     [data-count]::after {
       content: attr(data-count);
@@ -515,9 +506,9 @@ footer {
     .cart {
       display: none;
       top: unset;
-      bottom: 0;
+      bottom: var(--space-small);
       left: 50%;
-      translate: -50% -12.5%;
+      transform: translate(-50%, -5%);
       width: min(85vw, 450px);
 
       .cart--x-icon {
@@ -535,25 +526,16 @@ footer {
   .main {
     .cart {
       gap: var(--space-small);
-      translate: -50% -5%;
+      translate: 0 -30%;
       z-index: 5000;
 
       .list__cart {
-        max-height: 17.5dvh;
+        max-height: 25dvh;
 
         .cart__item {
           padding-block: var(--space-small);
         }
       }
     }
-  }
-}
-
-@keyframes rotation {
-  from {
-    --angle: 0deg;
-  }
-  to {
-    --angle: 360deg;
   }
 }
