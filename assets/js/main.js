@@ -210,6 +210,18 @@ const cartAction = {
     cartItemGenerator(item);
     confirmItemGenerator(item);
   },
+  // Restores Empty Cart UI
+  showEmptyUI() {
+    emptyCart.classList.remove('hidden');
+    cartTotalWrapper.classList.add('hidden');
+    cartConfirmWrapper.classList.add('hidden');
+  },
+  // Removes Empty Cart UI
+  hideEmptyUI() {
+    emptyCart.classList.add('hidden');
+    cartTotalWrapper.classList.remove('hidden');
+    cartConfirmWrapper.classList.remove('hidden');
+  },
   // This function updates the cart values -- Unit Qty, Unit Total, Order Qty, Order Total
   updateCart(order) {
     // Get all the orders existing in the cart
@@ -283,6 +295,15 @@ const cartAction = {
       // Remove the item from the cart list
       cartList.removeChild(itemToRemove); // remove the li
 
+      // Also get the item in the confirm list and remove it.
+      const confirmItems = document.querySelectorAll('.confirm__item');
+      const confirmItemToRemove = [...confirmItems].find(
+        (item) =>
+          item.querySelector('.confirm__detail--name').innerText ===
+          itemToRemoveName
+      );
+      confirmList.removeChild(confirmItemToRemove);
+
       // Find the item in the dessert list and restore its default state
       const dessertItemName = document.querySelectorAll(
         '.dessert__list__item__detail--name'
@@ -302,9 +323,7 @@ const cartAction = {
       // Check if the cart have items
       if (cartList.children.length < 1) {
         // If cart is empty display empty cart icon and remove total
-        emptyCart.classList.remove('hidden');
-        cartTotalWrapper.classList.add('hidden');
-        cartConfirmWrapper.classList.add('hidden');
+        this.showEmptyUI();
       }
 
       // Update the cart values
@@ -316,9 +335,7 @@ const cartAction = {
     cartList.replaceChildren();
     confirmList.replaceChildren();
     this.cartArray.length = 0;
-    emptyCart.classList.remove('hidden');
-    cartTotalWrapper.classList.add('hidden');
-    cartConfirmWrapper.classList.add('hidden');
+    this.showEmptyUI();
     dessertList.querySelectorAll('picture').forEach((pic) => {
       pic.classList.contains('selected') && pic.classList.remove('selected');
     });
@@ -340,7 +357,7 @@ const cartAction = {
 // Delegating all dessert action event to the Dessert List
 // ************************************************************************//
 dessertList.addEventListener('click', (event) => {
-  // Time Out tool tip
+  // Time Out tooltip
   const timeOutTooltip = (input) => {
     const toolTip = input.parentElement.nextElementSibling;
     toolTip.classList.remove('hidden');
@@ -390,19 +407,17 @@ dessertList.addEventListener('click', (event) => {
     const btnAddToCart = event.target?.closest('button');
     btnAddToCart.classList.add('hidden');
     btnAddToCart.nextElementSibling.classList.remove('hidden');
-    emptyCart.classList.add('hidden');
-    cartTotalWrapper.classList.remove('hidden');
-    cartConfirmWrapper.classList.remove('hidden');
+    cartAction.hideEmptyUI();
 
     // Create the ordered cart items as they are clicked
     cartAction.addToCart(cartAction.cartArray.slice(-1));
 
-    // Update the total price of the cart
+    // Update all cart total
     cartAction.updateCart();
   }
 
   // QUANTITY-ADJUSTER BUTTON CLICK EVENT AND INPUT EVENT
-  // Check if the quantity-adjuster button input element is being interacted with
+  // Check if the quantity-adjuster button and input element is being interacted with
   if (
     event.target?.matches(
       '.icon__decrement-quantity, .icon__increment-quantity, .input__quantity-adjuster'
