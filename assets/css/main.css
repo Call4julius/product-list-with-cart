@@ -27,6 +27,9 @@ header {
   width: 100%;
 
   .logo__container {
+    justify-content: center;
+    align-items: center;
+
     .logo__label {
       font-size: calc(var(--fs-base) * 1.5);
       font-weight: var(--fw-600);
