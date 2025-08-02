@@ -144,6 +144,7 @@ header {
 
           &:is(:hover, :focus-visible) {
             border-color: var(--color-accent-1);
+            color: var(--color-accent-1);
           }
 
           &.btn__add-to-cart {
@@ -542,3 +543,4 @@ footer {
     }
   }
 }
+
